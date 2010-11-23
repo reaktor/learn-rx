@@ -6,6 +6,8 @@ h1 {margin-left:auto;margin-right:auto;text-align:center;}
 #code {position:absolute;width:800px;top:120px;left:50%;margin-left:-400px;-moz-user-select:none;-webkit-user-select:none;}
 #types {position:absolute;width:1000px;top:500px;left:50%;margin-left:-400px;-moz-user-select:none;-webkit-user-select:none;}
 #types td {font-style:italic;color:#545454;font-size:20px;padding:10px;}
+h1 {-moz-user-select:none;-webkit-user-select:none;}
+#canvas {-moz-user-select:none;-webkit-user-select:none;}
 #canvas #results {font-size:14px;width:300px;}
 #zipimage {background-image:url(zip.png);}
 #mergeimage {background-image:url(merge.png);}
