@@ -141,8 +141,8 @@ function mkServerValidation(observable, url) {
 // JQuery -> [String] -> Observable String
 function eventSourceFor(selector, events) {
   var initialValue = currentValue(selector)
-  var changes = selector.toObservable(events.toString().replace(/,/g, " ")).
-    Select(function(event) { return currentValue(selector) })
+  var changes = selector.toObservable(events.toString().replace(/,/g, " "))
+    .Select(function(event) { return currentValue(selector) })
   return changes.Merge(Rx.Observable.Return(initialValue)).DistinctUntilChanged()
 }
 

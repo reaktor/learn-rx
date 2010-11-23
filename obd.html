@@ -56,8 +56,8 @@ $(function() {
 
   // (Int -> Bool) -> Observable (String, Int)
   function filterPages(predicate) {
-    return queries.Where(function([_, page]) { return predicate(page) })
-      .Select(function([term, page]) { return query(term, page) })
+    return queries.Where(function(q) { return predicate(q[1]) })
+      .Select(function(q) { return query(q[0], q[1]) })
       .Switch()
   }
 
