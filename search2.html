@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fi" lang="fi">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link type="text/css" rel="stylesheet" media="all" href="learn-rx.css" />
+  <link href="css/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="js/prettify.js"></script>
+  <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="js/rx.js"></script>
+  <script type="text/javascript" src="js/rx.jQuery.js"></script>
+  <script type="text/javascript" src="js/jsDraw2D.js"></script>
+  <script type="text/javascript" src="learn-rx.js"></script>
+  <script type="text/javascript" src="slide.js"></script>
+</head>
+
+<script id="source" type="text/javascript">
+$(function() {
+  // String -> Observable [String]
+  function searchTwitter(term) {
+    var url = "http://localhost:8080/query/" + escape(term)
+    return $.ajaxAsObservable({ url: url, dataType: "jsonp"})
+            .Select(function(d) { return d.data })
+  }
+
+  var input = $('#query').toObservable('keyup')
+    .Throttle(250)
+    .Select(function(event) { return $(event.target).val() })
+    .DistinctUntilChanged()
+
+  // Kompaktimmin: var results = input.Select(searchTwitter).Switch()
+  var results = input.SelectMany(function(term) { 
+    return searchTwitter(term).TakeUntil(input) 
+  })
+
+  results.Subscribe(
+    function(rs) {
+      $('#results').html('')
+      $.each(rs, function (_, result) {
+        $('#results').append("<li>" + result + "</li>")
+      })
+    }
+  )
+})
+</script>
+
+<body class="container">
+<h1>Demo: Twitter haku (production ready)</h1>
+
+<input id="query" type="text" autocomplete="off"/>
+<div id="canvas">
+<ul id="results"/>
+</div>
+
+<div id="code">
+<pre class="prettyprint">
+</pre>
+</div>
+</body>
+</html>

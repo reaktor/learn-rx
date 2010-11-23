@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fi" lang="fi">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link type="text/css" rel="stylesheet" media="all" href="learn-rx.css" />
+  <link href="css/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="js/prettify.js"></script>
+  <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="js/rx.js"></script>
+  <script type="text/javascript" src="js/rx.jQuery.js"></script>
+  <script type="text/javascript" src="js/jsDraw2D.js"></script>
+  <script type="text/javascript" src="learn-rx.js"></script>
+  <script type="text/javascript" src="slide.js"></script>
+</head>
+
+<script id="source" type="text/javascript">
+$(function() {
+  // String -> Observable [SearchResult JSON]
+  function query(term, page) {
+    var url = "http://ajax.googleapis.com/ajax/services/search/web?callback=?"
+    var pageSize = 10
+    console.log("q " + term + "       " + page)
+    var params = { v:"1.0", q:escape(term), num:pageSize, rsz:"large", safe:"off", start:page*pageSize }
+
+    return $.ajaxAsObservable({ url: url, dataType: "jsonp", data: params })
+            .Select(function(d) { return d.data.responseData ? d.data.responseData.results : [] })
+  }
+
+  var input = $('#query').toObservable('keyup')
+    .Throttle(50)
+    .Select(function(e) { return $(e.target).val() })
+    .DistinctUntilChanged()
+
+  var scrollBottom = $('#overviewpanel').toObservable('scroll')
+    .Select(isScrolledToBottom)
+    .DistinctUntilChanged()
+    .Where(function(inBottom) { return inBottom })
+
+  // Observable [(String, Int)]
+  var queries = input
+    .Select(function(term) {
+      return Rx.Observable.Return([term, 0])
+        .Merge(scrollBottom.Select(function(_) { return [term, 1] }))
+        .Scan([term, 0], function(cur, x) { 
+          return (x[1] == 0) ? [x[0], 0] : [x[0], cur[1] + x[1]] })
+    }).Switch()
+/*
+  var queries = input
+    .Select(function(x) { return [x, 0] })
+    .Merge(scrollBottom.Select(function(_) { return [$('#query').val(), 1] }))
+    .Scan([$('#query').val(), 0], function(cur, x) { 
+      return (x[1] == 0) ? [x[0], 0] : [x[0], cur[1] + x[1]] })*/
+
+  var first = filterPages(function(page) { return page == 0 })
+  var more  = filterPages(function(page) { return page > 0 })
+
+  // (Int -> Bool) -> Observable (String, Int)
+  function filterPages(predicate) {
+    return queries.Where(function([_, page]) { return predicate(page) })
+      .Select(function([term, page]) { return query(term, page) })
+      .Switch()
+  }
+
+  var selection = $('#overview li').toLiveObservable('click')
+    .Select(function(x) { return $(x.target).map(function(i, link) { return link.href })[0] })
+
+  first.Subscribe(function(rs) { $('#overview').html(''); renderResults(rs) })
+  more.Subscribe(renderResults)
+
+  first.Throttle(1500).Subscribe(
+    function(rs) {
+      if (rs.length > 0) renderDetail(rs[0].url)
+    })
+
+  selection.Subscribe(renderDetail)
+
+  function isScrolledToBottom(e) {
+    var scrollTolerance = 100
+    return e.target.scrollTop + e.target.offsetHeight + scrollTolerance > e.target.scrollHeight
+  }
+
+  // SearchResult JSON -> ()
+  function renderResults(rs) {
+    $.each(rs, function(i, x) {
+      var link = '<a href="' + x.unescapedUrl + '" onclick="return false;">' + x.titleNoFormatting + "</a>"
+      $('#overview').append("<li>" + link + "</li>")
+    })
+  }
+
+  function renderDetail(link) {
+    $('#detail').attr('src', link)
+  }
+})
+
+</script>
+
+<body class="container">
+<h1>OBD + jatkuvahaku</h1>
+
+<div id="overviewpanel">
+  <input type="text" id="query" autocomplete="off"/>
+
+  <ul id="overview">
+  </ul>
+</div>
+
+<div id="detailpanel">
+  <iframe id="detail" src="" style="width: 100%; height:700px;">
+  </iframe>
+</div>
+
+</body>
+</html>

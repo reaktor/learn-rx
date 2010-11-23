@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fi" lang="fi">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link type="text/css" rel="stylesheet" media="all" href="demo.css" />
+  <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="js/rx.js"></script>
+  <script type="text/javascript" src="js/rx.jQuery.js"></script>
+  <script type="text/javascript" src="js/rx.html.js"></script>
+  <script type="text/javascript" src="js/rx.aggregates.js"></script>
+  <script type="text/javascript" src="validation.js"></script>
+  <script type="text/javascript" src="demo.js"></script>
+  <script type="text/javascript" src="slide.js"></script>
+</head>
+
+<body>
+<div id="container">
+  <form method="POST">
+
+    <fieldset>
+    <legend>Personal information</legend>
+
+    <div>
+      <label><em>*</em> Username</label>
+      <input type="text" name="username" id="username" maxlength="32" autocomplete="off"/>
+      <em class="error username-taken-error">Username is already taken</em>
+      <em class="error username-too-long-error">Username is too long</em>
+    </div>
+
+    <div>
+      <label><em>*</em> Password</label>
+      <input type="password" name="password" id="password" maxlength="15" autocomplete="off"/>
+      <em class="error password-username-error">Password can't be same as a username</em>
+    </div>
+
+    <div>
+      <label>
+        <em>*</em>Password again
+      </label>
+      <input type="password" name="password-copy" id="password-copy" maxlength="15" autocomplete="off"/>
+      <em class="error password-match-error">Passwords do not match</em>
+    </div>
+
+    </fieldset>
+
+    <fieldset>
+    <legend>Targets</legend>
+
+    <div id="target">
+      <label>Target bonus</label>
+      <input type="text" id="target-min" autocomplete="off"/> - <input type="text" id="target-max" autocomplete="off"/>
+      <em class="error min-not-number-error">Min must be a number</em>
+      <em class="error max-not-number-error">Max must be a number</em>
+      <em class="error minmax-error">Min must be smaller than max</em>
+    </div>
+    </fieldset>
+
+    <fieldset>
+    <legend>Marketing</legend>
+
+    <div>
+      <label>Marketing mail</label>
+      <input type="checkbox" checked="true" value="allow-marketing" name="allow-marketing" id="allow-marketing" />
+    </div>
+    <div id="contact-info">
+      <label>Email</label>
+      <input type="text" name="email" id="email" autocomplete="off"/>
+      <em class="error email-format-error">Invalid email</em>
+    </div>
+
+    </fieldset>
+
+    <div id="create">
+      <input id="create-button" type="submit" name="create" value="Create" disabled="disabled"/>
+    </div>
+  </form>
+
+</div>
+</body>
+</html>

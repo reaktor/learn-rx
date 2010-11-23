@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fi" lang="fi">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link type="text/css" rel="stylesheet" media="all" href="learn-rx.css" />
+  <link href="css/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="js/prettify.js"></script>
+  <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="js/rx.js"></script>
+  <script type="text/javascript" src="js/rx.jQuery.js"></script>
+  <script type="text/javascript" src="js/jsDraw2D.js"></script>
+  <script type="text/javascript" src="learn-rx.js"></script>
+  <script type="text/javascript" src="slide.js"></script>
+</head>
+
+<script id="source" type="text/javascript">
+function Point(event) { return { x: event.pageX, y: event.pageY }}
+
+// Observable Event -> Observable Event -> Observable Event -> Observable (Point, Point)
+function dragPath(mouseDown, mouseUp, mouseMove) {
+  var moves = mouseMove.SkipUntil(mouseDown).TakeUntil(mouseUp)
+  return moves
+    .Zip(moves.Skip(1), function(prev, cur) { return [Point(prev), Point(cur)] })
+}
+
+$(function() {
+  var mouseDown = $("#draggable").toObservable("mousedown")
+  var mouseUp   = $(document).toObservable("mouseup")
+  var mouseMove = $(document).toObservable("mousemove")
+
+  dragPath(mouseDown, mouseUp, mouseMove).Repeat().Subscribe(function(line) {
+    var deltaX = line[1].x - line[0].x
+    var deltaY = line[1].y - line[0].y
+    var pos = $("#draggable").position()
+    $("#draggable").css("left", (pos.left + deltaX) + "px")
+    $("#draggable").css("top", (pos.top + deltaY) + "px")
+  })
+})
+</script>
+
+<body class="container">
+<h1>Encapsulation</h1>
+
+<div id="draggable">
+  <span>FP rocks!</span>
+</div>
+
+<div id="code">
+<pre class="prettyprint">
+</pre>
+</div>
+
+</body>
+</html>

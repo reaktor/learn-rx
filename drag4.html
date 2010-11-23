@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fi" lang="fi">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link type="text/css" rel="stylesheet" media="all" href="learn-rx.css" />
+  <link href="css/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="js/prettify.js"></script>
+  <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="js/rx.js"></script>
+  <script type="text/javascript" src="js/rx.aggregates.js"></script>
+  <script type="text/javascript" src="js/rx.jQuery.js"></script>
+  <script type="text/javascript" src="js/jsDraw2D.js"></script>
+  <script type="text/javascript" src="learn-rx.js"></script>
+  <script type="text/javascript" src="slide.js"></script>
+</head>
+
+<script id="source" type="text/javascript">
+function Point(event) { return { x: event.pageX, y: event.pageY }}
+
+// Observable Event -> Observable Event -> Observable Event -> Observable (Point, Point)
+function dragPath(mouseDown, mouseUp, mouseMove) {
+  var moves = mouseMove.SkipUntil(mouseDown).TakeUntil(mouseUp)
+  return moves
+    .Zip(moves.Skip(1), function(prev, cur) { return [Point(prev), Point(cur)] })
+}
+
+$(function() {
+  var mouseDown = $(document).toObservable("mousedown")
+  var mouseUp   = $(document).toObservable("mouseup")
+  var mouseMove = $(document).toObservable("mousemove")
+
+  var closedPath = dragPath(mouseDown, mouseUp, mouseMove).Repeat()
+    .Merge(mouseDown.Zip(mouseUp, function(prev, cur) { return [Point(prev), Point(cur)] }))
+
+  closedPath.Subscribe(function(line) { drawline(line[0], line[1]) })
+
+  var length = closedPath
+    .TakeUntil(mouseUp)
+    .Aggregate(0, function(total, line) { return total + length(line) })
+    .Repeat()
+
+  length.Subscribe(function(len) { $('#length').html("Length: " + len) })
+
+  function length(line) {
+    var deltaX = line[1].x - line[0].x
+    var deltaY = line[1].y - line[0].y
+    return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2))
+  }
+})
+
+</script>
+
+<body class="container">
+<h1>Composition</h1>
+
+<div id="length"></div>
+<div id="canvas"></div>
+
+<div id="code">
+<pre class="prettyprint">
+</pre>
+</div>
+
+</body>
+</html>

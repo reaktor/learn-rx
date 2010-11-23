@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fi" lang="fi">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link type="text/css" rel="stylesheet" media="all" href="learn-rx.css" />
+  <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+</head>
+
+<script type="text/javascript">
+function param(name) {
+  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]")
+  var regexS = "[\\?&]"+name+"=([^&#]*)"
+  var regex = new RegExp(regexS)
+  var results = regex.exec(window.location.href)
+  if (results == null)
+    return ""
+  else
+    return results[1]
+}
+
+$(function() {
+  $('#split1').attr("src", param("split1"))
+  $('#split2').attr("src", param("split2"))
+})
+</script>
+
+<frameset cols="50%,50%">
+  <frame id="split1" src="" />
+  <frame id="split2" src="" />
+</frameset>

@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fi" lang="fi">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link type="text/css" rel="stylesheet" media="all" href="learn-rx.css" />
+  <link href="css/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="js/prettify.js"></script>
+  <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="js/rx.js"></script>
+  <script type="text/javascript" src="js/rx.jQuery.js"></script>
+  <script type="text/javascript" src="js/jsDraw2D.js"></script>
+  <script type="text/javascript" src="learn-rx.js"></script>
+  <script type="text/javascript" src="slide.js"></script>
+</head>
+
+<script id="source" type="text/javascript">
+$(function() {
+  function always(x) { return function(_) { return x }}
+
+  var incr = $('#incr').toObservable('click').Select(always(1))
+  var decr = $('#decr').toObservable('click').Select(always(-1))
+
+  incr.Merge(decr)
+    .Scan(0, function(total, x) { return total + x })
+    .Subscribe(updateCount)
+
+  function updateCount(total) {
+    $('#count').html(total)
+  }
+})
+</script>
+
+<body class="container">
+<h1>Declarative and composable</h1>
+
+<input id="incr" type="button" value="+"/>
+<input id="decr" type="button" value="-"/>
+<span id="count"></span>
+<div id="canvas"></div>
+
+<div id="code">
+<pre class="prettyprint">
+</pre>
+</div>
+
+<div id="types">
+<pre>
+Incr  -->  Select (always  1) 
+
+                               -->  Merge  -->  Scan 0 (+)  --> Subscribe f
+
+Decr  -->  Select (always -1) 
+</pre>
+</div>
+
+</body>
+</html>
