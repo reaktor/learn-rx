@@ -135,7 +135,7 @@ function mkServerValidation(observable, url) {
   }
   var throttle = observable.Throttle(1000).DistinctUntilChanged()
   var serverHit = throttle.Select(validation).Switch()
-  return [serverHit, throttle, serverHit]
+  return { validation:serverHit, requestOn:throttle, requestOff:serverHit }
 }
 
 // JQuery -> [String] -> Observable String

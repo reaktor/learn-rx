@@ -19,11 +19,10 @@ $(function() {
   unameValidation.Subscribe(toggleEffect($('.username-too-long-error')))
   unameValidation.Subscribe(toggleClassEffect($('#username'), 'invalid'))
 
-  var [uniqueValidation, requestOnIndicator, requestOffIndicator] = 
-    mkServerValidation(uname, "http://localhost:8080/validateusername/")
-  uniqueValidation.Subscribe(toggleEffect($('.username-taken-error')))
-  requestOnIndicator.Subscribe(function() { $('#username').addClass("on-validate") })
-  requestOffIndicator.Subscribe(function() { $('#username').removeClass("on-validate") })
+  var uniqueValidation = mkServerValidation(uname, "http://localhost:8080/validateusername/")
+  uniqueValidation.validation.Subscribe(toggleEffect($('.username-taken-error')))
+  uniqueValidation.requestOn.Subscribe(function() { $('#username').addClass("on-validate") })
+  uniqueValidation.requestOff.Subscribe(function() { $('#username').removeClass("on-validate") })
 
   var unamePwdValidation = mkValidation(sequence([uname, pwd]), emptyOk(not(matchingValuesValidator())))
   unamePwdValidation.Subscribe(toggleEffect($('.password-username-error')))
@@ -50,7 +49,7 @@ $(function() {
 
   var all = sequence([unameValidation, unamePwdValidation, pwdValidation, minNumValidation,
                       maxNumValidation, minMaxValidation, marketingValidation, 
-                      requiredValidation, emailRequired, uniqueValidation])
+                      requiredValidation, emailRequired, uniqueValidation.validation])
   all.Subscribe(disableEffect($('#create-button')))
 })
 
