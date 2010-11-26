@@ -125,7 +125,7 @@ function mkValidation(observable, validator) {
 // Observable String -> String -> (Validation, Observable a, Observable a)
 function mkServerValidation(observable, url) {
   var responseValidator = function(resp) {
-    if (resp.data.success) return [] 
+    if (resp.data == undefined || resp.data.success) return [] 
     else return resp.data.error       
   }
   var validation = function(value) {

@@ -22,7 +22,8 @@ $(function() {
   var uniqueValidation = mkServerValidation(uname, "http://localhost:8080/validateusername/")
   uniqueValidation.validation.Subscribe(toggleEffect($('.username-taken-error')))
   uniqueValidation.requestOn.Subscribe(function() { $('#username').addClass("on-validate") })
-  uniqueValidation.requestOff.Subscribe(function() { $('#username').removeClass("on-validate") })
+  var indicatorOff = function() { $('#username').removeClass("on-validate") }
+  uniqueValidation.requestOff.Subscribe(indicatorOff, indicatorOff, indicatorOff)
 
   var unamePwdValidation = mkValidation(sequence([uname, pwd]), emptyOk(not(matchingValuesValidator())))
   unamePwdValidation.Subscribe(toggleEffect($('.password-username-error')))
