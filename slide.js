@@ -15,7 +15,7 @@ $(function() {
   })
 
   function ctrlDown(e) {
-    return e.ctrlKey == 1
+    return e.keyCode == 17 || e.ctrlKey == 1
   }
 
   function keyUps(code) {
