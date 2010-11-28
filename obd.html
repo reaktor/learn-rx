@@ -19,7 +19,6 @@ $(function() {
   function query(term, page) {
     var url = "http://ajax.googleapis.com/ajax/services/search/web?callback=?"
     var pageSize = 10
-    console.log("q " + term + "       " + page)
     var params = { v:"1.0", q:escape(term), num:pageSize, rsz:"large", safe:"off", start:page*pageSize }
 
     return $.ajaxAsObservable({ url: url, dataType: "jsonp", data: params })
