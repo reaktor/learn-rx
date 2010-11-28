@@ -25,15 +25,15 @@ $(function() {
   var indicatorOff = function() { $('#username').removeClass("on-validate") }
   uniqueValidation.requestOff.Subscribe(indicatorOff, indicatorOff, indicatorOff)
 
-  var unamePwdValidation = mkValidation(sequence([uname, pwd]), emptyOk(not(matchingValuesValidator())))
+  var unamePwdValidation = mkValidation(combine([uname, pwd]), emptyOk(not(matchingValuesValidator())))
   unamePwdValidation.Subscribe(toggleEffect($('.password-username-error')))
 
-  var pwdValidation = mkValidation(sequence([pwd, pwd2]), emptyOk(matchingValuesValidator()))
+  var pwdValidation = mkValidation(combine([pwd, pwd2]), emptyOk(matchingValuesValidator()))
   pwdValidation.Subscribe(toggleEffect($('.password-match-error')))
 
   var minNumValidation = mkValidation(min, emptyOk(numberValidator()))
   var maxNumValidation = mkValidation(max, emptyOk(numberValidator()))
-  var minMaxValidation = mkValidation(sequence([min, max]), orderValidator())
+  var minMaxValidation = mkValidation(combine([min, max]), orderValidator())
     .ValidWhileInvalid(minNumValidation)
     .ValidWhileInvalid(maxNumValidation)
 
@@ -48,9 +48,9 @@ $(function() {
 
   var requiredValidation = required([uname, pwd, pwd2])
 
-  var all = sequence([unameValidation, unamePwdValidation, pwdValidation, minNumValidation,
-                      maxNumValidation, minMaxValidation, marketingValidation, 
-                      requiredValidation, emailRequired, uniqueValidation.validation])
+  var all = combine([unameValidation, unamePwdValidation, pwdValidation, minNumValidation,
+                     maxNumValidation, minMaxValidation, marketingValidation, 
+                     requiredValidation, emailRequired, uniqueValidation.validation])
   all.Subscribe(disableEffect($('#create-button')))
 })
 

@@ -158,7 +158,7 @@ function currentValue(selector) {
 
 // [Observable String] -> Validation
 function required(xs) {
-  return sequence($.map(xs, function(x) { return mkValidation(x, requiredValidator()) }))
+  return combine($.map(xs, function(x) { return mkValidation(x, requiredValidator()) }))
 }
 
 // ValidationResult -> Bool
@@ -200,7 +200,7 @@ function disableEffect(component) {
 }
 
 // [Observable a] -> Observable [a]
-function sequence(xs) {
+function combine(xs) {
   function flatten(x1, x2) {
     return $.map(Array(x1, x2), identity)
   }
