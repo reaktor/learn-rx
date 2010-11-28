@@ -44,12 +44,6 @@ $(function() {
         .Scan([term, 0], function(cur, x) { 
           return (x[1] == 0) ? [x[0], 0] : [x[0], cur[1] + x[1]] })
     }).Switch()
-/*
-  var queries = input
-    .Select(function(x) { return [x, 0] })
-    .Merge(scrollBottom.Select(function(_) { return [$('#query').val(), 1] }))
-    .Scan([$('#query').val(), 0], function(cur, x) { 
-      return (x[1] == 0) ? [x[0], 0] : [x[0], cur[1] + x[1]] })*/
 
   var first = filterPages(function(page) { return page == 0 })
   var more  = filterPages(function(page) { return page > 0 })
