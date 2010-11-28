@@ -38,7 +38,9 @@ $(function() {
     .ValidWhileInvalid(maxNumValidation)
 
   minNumValidation.Subscribe(toggleEffect($('.min-not-number-error')))
+  minNumValidation.Subscribe(toggleClassEffect($('#target-min'), 'invalid'))
   maxNumValidation.Subscribe(toggleEffect($('.max-not-number-error')))
+  maxNumValidation.Subscribe(toggleClassEffect($('#target-max'), 'invalid'))
   minMaxValidation.Subscribe(toggleEffect($('.minmax-error')))
 
   var emailValidation = mkValidation(email, emptyOk(emailValidator()))
