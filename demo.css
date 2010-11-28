@@ -12,7 +12,7 @@ div.multi label {display:block;width:200px;padding-left:5em;text-align:left;}
 input:focus,textarea:focus {border:1px solid #df1823;}
 body {padding:0;margin:20px;color:#333;background:#ccc;font:12px arial,verdana,sans-serif;text-align:center;}
 #container {margin:0 auto;padding:1em;width:450px;text-align:left;}
-#target input {width:70px;}
+#target input {width:73px;}
 
 .error {display:none;margin-left:125px;margin-top:1em;margin-bottom:1em;color: #df1823;font-weight: bold;}
 .invalid {background:#ffe5e5;border:1px solid #df1823;}
