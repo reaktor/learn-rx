@@ -15,6 +15,13 @@
 
 <script id="source" type="text/javascript">
 $(function() {
+  // Implement the following features (some helper functions are given below):
+
+  // 1. Do a query and render the results (throttle 50ms)
+  // 2. Open the first result and render it to #detail with 1500ms delay
+  // 3. Make each result a clickable link, link opens the page to #detail
+  // 4. Query more results when the user scrolls the scrollbar to the bottom
+
   // String -> Observable [SearchResult JSON]
   function query(term, page) {
     var url = "http://ajax.googleapis.com/ajax/services/search/web?callback=?"
@@ -25,53 +32,6 @@ $(function() {
             .Select(function(d) { return d.data.responseData ? d.data.responseData.results : [] })
   }
 
-  var input = $('#query').toObservable('keyup')
-    .Throttle(50)
-    .Select(function(e) { return $(e.target).val() })
-    .DistinctUntilChanged()
-
-  var scrollBottom = $('#overviewpanel').toObservable('scroll')
-    .Select(isScrolledToBottom)
-    .DistinctUntilChanged()
-    .Where(function(inBottom) { return inBottom })
-
-  // Observable [(String, Int)]
-  var queries = input
-    .Select(function(term) {
-      return Rx.Observable.Return([term, 0])
-        .Merge(scrollBottom.Select(function(_) { return [term, 1] }))
-        .Scan([term, 0], function(cur, x) { 
-          return (x[1] == 0) ? [x[0], 0] : [x[0], cur[1] + x[1]] })
-    }).Switch()
-
-  var first = filterPages(function(page) { return page == 0 })
-  var more  = filterPages(function(page) { return page > 0 })
-
-  // (Int -> Bool) -> Observable (String, Int)
-  function filterPages(predicate) {
-    return queries.Where(function(q) { return predicate(q[1]) })
-      .Select(function(q) { return query(q[0], q[1]) })
-      .Switch()
-  }
-
-  var selection = $('#overview li').toLiveObservable('click')
-    .Select(function(x) { return $(x.target).map(function(i, link) { return link.href })[0] })
-
-  first.Subscribe(function(rs) { $('#overview').html(''); renderResults(rs) })
-  more.Subscribe(renderResults)
-
-  first.Throttle(1500).Subscribe(
-    function(rs) {
-      if (rs.length > 0) renderDetail(rs[0].url)
-    })
-
-  selection.Subscribe(renderDetail)
-
-  function isScrolledToBottom(e) {
-    var scrollTolerance = 100
-    return e.target.scrollTop + e.target.offsetHeight + scrollTolerance > e.target.scrollHeight
-  }
-
   // SearchResult JSON -> ()
   function renderResults(rs) {
     $.each(rs, function(i, x) {
@@ -80,8 +40,15 @@ $(function() {
     })
   }
 
+  // String -> ()
   function renderDetail(link) {
     $('#detail').attr('src', link)
+  }
+
+  // HtmlEvent -> Bool
+  function isScrolledToBottom(e) {
+    var scrollTolerance = 100
+    return e.target.scrollTop + e.target.offsetHeight + scrollTolerance > e.target.scrollHeight
   }
 })
 
