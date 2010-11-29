@@ -22,7 +22,7 @@ $(function() {
   // 3. Make each result a clickable link, link opens the page to #detail
   // 4. Query more results when the user scrolls the scrollbar to the bottom
 
-  // String -> Observable [SearchResult JSON]
+  // String -> -> Int -> Observable [SearchResultJSON]
   function query(term, page) {
     var url = "http://ajax.googleapis.com/ajax/services/search/web?callback=?"
     var pageSize = 10
@@ -32,7 +32,7 @@ $(function() {
             .Select(function(d) { return d.data.responseData ? d.data.responseData.results : [] })
   }
 
-  // SearchResult JSON -> ()
+  // SearchResultJSON -> ()
   function renderResults(rs) {
     $.each(rs, function(i, x) {
       var link = '<a href="' + x.unescapedUrl + '" onclick="return false;">' + x.titleNoFormatting + "</a>"
