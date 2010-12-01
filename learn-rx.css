@@ -5,9 +5,14 @@ h1 {margin-left:auto;margin-right:auto;text-align:center;}
 #draggable {position:absolute;left:100px;top:100px;cursor:move;-moz-user-select:none;}
 #code {position:absolute;width:800px;top:120px;left:50%;margin-left:-400px;}
 #types {position:absolute;width:1000px;top:500px;left:50%;margin-left:-400px;}
+#canvas #results {font-size:14px;width:300px;}
+/* For smaller resolution
+#code {position:absolute;width:800px;top:120px;left:50%;margin-left:-330px;}
+#types {position:absolute;width:1000px;top:460px;left:50%;margin-left:-300px;}
+#canvas #results {font-size:10px;width:150px;}
+*/
 #types td {font-style:italic;color:#545454;font-size:20px;padding:10px;}
 h1 {-moz-user-select:none;-webkit-user-select:none;}
-#canvas #results {font-size:14px;width:300px;}
 #zipimage {background-image:url(zip.png);}
 #mergeimage {background-image:url(merge.png);}
 #concatimage {background-image:url(concat.png);}
