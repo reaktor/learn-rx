@@ -132,6 +132,7 @@ function mkServerValidation(observable, url) {
     if ($.trim(value) == "") return Rx.Observable.Return([])
     return $.ajaxAsObservable({ url: url + value, dataType: "jsonp"})
             .Select(responseValidator)
+            .Catch(function(exp) { return Rx.Observable.Return([]) })
   }
   var throttle = observable.Throttle(1000).DistinctUntilChanged()
   var serverHit = throttle.Select(validation).Switch()

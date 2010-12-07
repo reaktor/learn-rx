@@ -27,10 +27,7 @@ $(function() {
     .Select(function(event) { return $(event.target).val() })
     .DistinctUntilChanged()
 
-  // Kompaktimmin: var results = input.Select(searchTwitter).Switch()
-  var results = input.SelectMany(function(term) { 
-    return searchTwitter(term).TakeUntil(input) 
-  })
+  var results = input.Select(searchTwitter).Switch()
 
   results.Subscribe(
     function(rs) {
