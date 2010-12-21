@@ -16,11 +16,11 @@
 <script id="source" type="text/javascript">
 $(function() {
   function permutations(s) { 
-    return Rx.Observable.ForkJoin.apply(null, permute(s))
+    return Rx.Observable.Return(permute(s)).Delay(3000)
   }
 
   var source = $('#text').toObservable('keyup')
-    .Select(function(e) { return $('#text').val() })
+    .Select(function(e) { return $(e.target).val() })
     .SelectMany(function(t) { return permutations(t) })
 
   source.Subscribe(

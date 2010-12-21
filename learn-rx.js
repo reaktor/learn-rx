@@ -57,7 +57,7 @@ function permute(input) {
   var ps = []
   function permute0(start, end) {
     if (end.length <= 1) {
-      ps.push(Rx.Observable.Return(start + end))
+      ps.push(start + end)
     } else {
       for (var i = 0; i < end.length; i++) {
         var next = end.substring(0, i) + end.substring(i + 1)
