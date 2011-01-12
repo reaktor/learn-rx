@@ -17,17 +17,17 @@ $(function() {
   }
 
   // Validation -> Validation -> Validation
-  Object.prototype.ValidWhileInvalid = function(other) {
+  Rx.Observable.prototype.ValidWhileInvalid = function(other) {
     return this.ValidWhile(other, function(currentValue) { return currentValue.length > 0 })
   }
 
   // Validation -> Validation -> String -> Validation
-  Object.prototype.ValidWhileEqual = function(other, value) {
+  Rx.Observable.prototype.ValidWhileEqual = function(other, value) {
     return this.ValidWhile(other, function(currentValue) { return currentValue == value })
   }
 
   // Validation -> Validation -> (String -> Bool) -> Validation
-  Object.prototype.ValidWhile = function(other, predicate) {
+  Rx.Observable.prototype.ValidWhile = function(other, predicate) {
     return this.CombineLatest(other, function(v1, v2) { return [v1, v2] })
                .Select(function(vs) { if (predicate(vs[1])) return [] 
                                       else return vs[0] })    
