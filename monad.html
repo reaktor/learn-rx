@@ -15,6 +15,7 @@
 
 <script id="source" type="text/javascript">
 $(function() {
+  // String -> Observable [String]
   function permutations(s) { 
     return Rx.Observable.Return(permute(s)).Delay(3000)
   }

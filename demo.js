@@ -25,11 +25,11 @@ $(function() {
   var indicatorOff = function() { $('#username').removeClass("on-validate") }
   uniqueValidation.requestOff.Subscribe(indicatorOff, indicatorOff, indicatorOff)
 
-  var unamePwdValidation = mkValidation(combine([uname, pwd]), emptyOk(not(matchingValuesValidator())))
-  unamePwdValidation.Subscribe(toggleEffect($('.password-username-error')))
-
   var pwdValidation = mkValidation(combine([pwd, pwd2]), emptyOk(matchingValuesValidator()))
   pwdValidation.Subscribe(toggleEffect($('.password-match-error')))
+
+  var unamePwdValidation = mkValidation(combine([uname, pwd]), emptyOk(not(matchingValuesValidator())))
+  unamePwdValidation.Subscribe(toggleEffect($('.password-username-error')))
 
   var minNumValidation = mkValidation(min, emptyOk(numberValidator()))
   var maxNumValidation = mkValidation(max, emptyOk(numberValidator()))
