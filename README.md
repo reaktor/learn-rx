@@ -5,10 +5,10 @@ Usage
 
 2. Commands
 
-- next slide: ctrl-. 
-- prev slide: ctrl-, 
-- splitview:  ctrl-2
-- pen:        ctrl + mouse
+    next slide: ctrl-. 
+    prev slide: ctrl-, 
+    splitview:  ctrl-2
+    pen:        ctrl + mouse
 
 3. Some demos require a server: cd server; sbt jetty-run
 
