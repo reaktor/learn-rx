@@ -13,5 +13,6 @@ Commands
 Some demos require a server: 
 
     cd server
+    sbt update
     sbt jetty-run
 
