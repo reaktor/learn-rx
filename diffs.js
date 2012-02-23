@@ -24,7 +24,7 @@ function show(selector) {
 // Observable a -> Observable a -> a -> Observable (a, a)
 Rx.Observable.prototype.Diff = function(savedValues, initialSavedValue) {
   var currentValues = this
-  var saved = Rx.Observable.Return(initialSavedValue).Merge(savedValues)
+  var saved = savedValues.StartWith(initialSavedValue)
   return currentValues.CombineLatest(saved, tupled)
 }  
 
