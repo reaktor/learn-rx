@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fi" lang="fi">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link type="text/css" rel="stylesheet" media="all" href="demo.css" />
+  <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="js/rx.js"></script>
+  <script type="text/javascript" src="js/rx.jQuery.js"></script>
+  <script type="text/javascript" src="js/rx.html.js"></script>
+  <script type="text/javascript" src="js/rx.aggregates.js"></script>
+  <script type="text/javascript" src="diffs.js"></script>
+  <script type="text/javascript" src="slide.js"></script>
+</head>
+
+<body>
+<div id="container">
+  <form method="POST">
+
+    <fieldset>
+    <legend>Personal information</legend>
+
+    <div>
+      <label><em>*</em> Firstname</label>
+      <input type="text" name="fname" id="fname" maxlength="32" autocomplete="off"/>
+    </div>
+
+    <div>
+      <label><em>*</em> Lastname</label>
+      <input type="text" name="lname" id="lname" maxlength="32" autocomplete="off"/>
+    </div>
+
+    </fieldset>
+
+    <div id="create">
+      <input id="submit" onclick="return false;" type="submit" value="Save" />
+    </div>
+  </form>
+
+  <div>
+    <div><b>Firstname</b></div>
+    Current: <div id="fname-value"></div>
+    Saved: <div id="fname-saved"></div>
+
+    <div><b>Lastname</b></div>
+    Current: <div id="lname-value"></div>
+    Saved: <div id="lname-saved"></div>
+  </div>
+
+</div>
+</body>
+</html>
