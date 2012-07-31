@@ -1,7 +1,9 @@
+
 Usage
 =====
 
-Clone this and point your browser to file://.../start.html
+Click [here](http://reaktor.github.com/learn-rx/demo.html)  or this and point your browser to file://.../start.html
+
 
 Commands
 
