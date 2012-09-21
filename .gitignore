@@ -5,3 +5,5 @@ project/boot
 *.class
 *.log
 *.lock
+.idea
+*.iml
