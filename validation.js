@@ -28,8 +28,8 @@ $(function() {
 
   // Validation -> Validation -> (String -> Bool) -> Validation
   Rx.Observable.prototype.ValidWhile = function(other, predicate) {
-    return this.CombineLatest(other, function(v1, v2) { return [v1, v2] })
-               .Select(function(vs) { if (predicate(vs[1])) return [] 
+    return this.combineLatest(other, function(v1, v2) { return [v1, v2] })
+               .select(function(vs) { if (predicate(vs[1])) return []
                                       else return vs[0] })    
   }
 })
@@ -113,7 +113,7 @@ function not(validatorF) {
 
 // Observable a -> (a -> ValidationResult) -> Validation
 function mkValidation(observable, validator) {
-  return observable.Select(
+  return observable.select(
     function(args) {
       if ($.isArray(args))
         return validator.apply(null, args)
@@ -129,22 +129,22 @@ function mkServerValidation(observable, url) {
     else return resp.data.error       
   }
   var validation = function(value) {
-    if ($.trim(value) == "") return Rx.Observable.Return([])
+    if ($.trim(value) == "") return Rx.Observable.returnValue([])
     return $.ajaxAsObservable({ url: url + value, dataType: "jsonp"})
-            .Select(responseValidator)
-            .Catch(function(exp) { return Rx.Observable.Return([]) })
+            .select(responseValidator)
+            .catchException(function(exp) { return Rx.Observable.returnValue([]) })
   }
-  var throttle = observable.Throttle(1000).DistinctUntilChanged()
-  var serverHit = throttle.Select(validation).Switch()
+  var throttle = observable.throttle(1000).distinctUntilChanged()
+  var serverHit = throttle.select(validation).switchLatest()
   return { validation:serverHit, requestOn:throttle, requestOff:serverHit }
 }
 
 // JQuery -> [String] -> Observable String
 function eventSourceFor(selector, events) {
   var initialValue = currentValue(selector)
-  var changes = selector.toObservable(events.toString().replace(/,/g, " "))
-    .Select(function(event) { return currentValue(selector) })
-  return changes.Merge(Rx.Observable.Return(initialValue)).DistinctUntilChanged()
+  var changes = selector.onAsObservable(events.toString().replace(/,/g, " "))
+    .select(function(event) { return currentValue(selector) })
+  return changes.merge(Rx.Observable.returnValue(initialValue)).distinctUntilChanged()
 }
 
 // JQuery -> String
@@ -208,7 +208,7 @@ function combine(xs) {
 
   var combined = xs[0]
   for (i = 1; i < xs.length; i = i+1) {
-    combined = combined.CombineLatest(xs[i], flatten)
+    combined = combined.combineLatest(xs[i], flatten)
   }
   return combined
 }

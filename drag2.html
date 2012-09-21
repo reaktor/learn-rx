@@ -5,9 +5,10 @@
   <link type="text/css" rel="stylesheet" media="all" href="learn-rx.css" />
   <link href="css/prettify.css" type="text/css" rel="stylesheet" />
   <script type="text/javascript" src="js/prettify.js"></script>
-  <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="js/jquery-1.8.2.js"></script>
   <script type="text/javascript" src="js/rx.js"></script>
-  <script type="text/javascript" src="js/rx.jQuery.js"></script>
+  <script type="text/javascript" src="js/rx.time.js"></script>
+  <script type="text/javascript" src="js/rx.jquery.js"></script>
   <script type="text/javascript" src="js/jsDraw2D.js"></script>
   <script type="text/javascript" src="learn-rx.js"></script>
   <script type="text/javascript" src="slide.js"></script>
@@ -15,15 +16,15 @@
 
 <script id="source" type="text/javascript">
 $(function() {
-  var mouseDown = $(document).toObservable("mousedown")
-  var mouseUp   = $(document).toObservable("mouseup")
-  var mouseMove = $(document).toObservable("mousemove")
+  var mouseDown = $(document).onAsObservable("mousedown")
+  var mouseUp   = $(document).onAsObservable("mouseup")
+  var mouseMove = $(document).onAsObservable("mousemove")
 
-  var moves = mouseMove.SkipUntil(mouseDown).TakeUntil(mouseUp)
+  var moves = mouseMove.skipUntil(mouseDown).takeUntil(mouseUp)
   var path = moves
-    .Zip(moves.Skip(1), function(prev, cur) { return [Point(prev), Point(cur)] })
+    .zip(moves.skip(1), function(prev, cur) { return [Point(prev), Point(cur)] })
 
-  path.Repeat().Subscribe(function(line) { drawline(line[0], line[1]) })
+  path.repeat().subscribe(function(line) { drawline(line[0], line[1]) })
 
   function Point(event) { return { x: event.pageX, y: event.pageY }}
 })

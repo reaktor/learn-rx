@@ -2,29 +2,29 @@ $(function() {
   gr = new jsGraphics(document.getElementById("canvas"))
   pen = new jsPen(new jsColor("red"), 4)
 
-  $(document).toObservable("keyup").Where(isCtrl)
-    .Subscribe(function(e) { 
+  $(document).onAsObservable("keyup").where(isCtrl)
+    .subscribe(function(e) {
       enableSelection($('#canvas'))
       enableSelection($('#code'))
       enableSelection($('#types'))
     })
-  $(document).toObservable("keydown").Where(isCtrl)
-    .Subscribe(function(e) { 
+  $(document).onAsObservable("keydown").where(isCtrl)
+    .subscribe(function(e) {
       disableSelection($('#canvas'))
       disableSelection($('#code'))
       disableSelection($('#types'))
     })
 
-  var mouseDown = $(document).toObservable("mousedown")
-  var mouseUp   = $(document).toObservable("mouseup")
-  var mouseMove = $(document).toObservable("mousemove")
+  var mouseDown = $(document).onAsObservable("mousedown")
+  var mouseUp   = $(document).onAsObservable("mouseup")
+  var mouseMove = $(document).onAsObservable("mousemove")
 
-  var moves = mouseMove.SkipUntil(mouseDown).TakeUntil(mouseUp)
-  var path = moves.Where(isCtrl).
-    Zip(moves.Skip(1), function(prev, cur) { return [Point(prev), Point(cur)] }).
-    Repeat()
+  var moves = mouseMove.skipUntil(mouseDown).takeUntil(mouseUp)
+  var path = moves.where(isCtrl).
+    zip(moves.skip(1), function(prev, cur) { return [Point(prev), Point(cur)] }).
+    repeat()
 
-  path.Subscribe(function(line) { drawline(line[0], line[1]) })
+  path.subscribe(function(line) { drawline(line[0], line[1]) })
 
   function Point(event) { return { x: event.pageX, y: event.pageY }}
 

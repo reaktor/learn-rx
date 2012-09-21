@@ -5,9 +5,10 @@
   <link type="text/css" rel="stylesheet" media="all" href="learn-rx.css" />
   <link href="css/prettify.css" type="text/css" rel="stylesheet" />
   <script type="text/javascript" src="js/prettify.js"></script>
-  <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="js/jquery-1.8.2.js"></script>
   <script type="text/javascript" src="js/rx.js"></script>
-  <script type="text/javascript" src="js/rx.jQuery.js"></script>
+  <script type="text/javascript" src="js/rx.time.js"></script>
+  <script type="text/javascript" src="js/rx.jquery.js"></script>
   <script type="text/javascript" src="js/jsDraw2D.js"></script>
   <script type="text/javascript" src="learn-rx.js"></script>
   <script type="text/javascript" src="slide.js"></script>
@@ -17,12 +18,12 @@
 $(function() {
   function always(x) { return function(_) { return x }}
 
-  var incr = $('#incr').toObservable('click').Select(always(1))
-  var decr = $('#decr').toObservable('click').Select(always(-1))
+  var incr = $('#incr').onAsObservable('click').select(always(1))
+  var decr = $('#decr').onAsObservable('click').select(always(-1))
 
-  incr.Merge(decr)
-    .Scan(0, function(total, x) { return total + x })
-    .Subscribe(updateCount)
+  incr.merge(decr)
+    .scan(0, function(total, x) { return total + x })
+    .subscribe(updateCount)
 
   function updateCount(total) {
     $('#count').html(total)
@@ -45,11 +46,11 @@ $(function() {
 
 <div id="types">
 <pre>
-Incr  -->  Select (always  1) 
+Incr  -->  select (always  1)
 
-                               -->  Merge  -->  Scan 0 (+)  --> Subscribe f
+                               -->  merge  -->  Scan 0 (+)  --> Subscribe f
 
-Decr  -->  Select (always -1) 
+Decr  -->  select (always -1)
 </pre>
 </div>
 

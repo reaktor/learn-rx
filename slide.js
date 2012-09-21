@@ -1,16 +1,16 @@
 $(function() {
   var slides = ['start.html', 'demo.html', 'obs.html', 'obshot.html', 'functor.html', 'monad.html', 'declarative.html', 'drag1.html', 'drag2.html', 'drag3.html', 'zip.html', 'merge.html', 'concat.html', 'combineLatest.html','search.html', 'search2.html', 'impls.html', 'obd.html']
 
-  keyUps(190 /* . */).Where(ctrlDown).Subscribe(function(e) {
+  keyUps(190 /* . */).where(ctrlDown).subscribe(function(e) {
     window.location = slides[(currentSlide()+1) % slides.length]        
   })
-  keyUps(188 /* , */).Where(ctrlDown).Subscribe(function(e) {
+  keyUps(188 /* , */).where(ctrlDown).subscribe(function(e) {
     window.location = slides[prevSlide()]
   })
-  keyUps(49 /* 1 */).Where(ctrlDown).Subscribe(function(e) {
+  keyUps(49 /* 1 */).where(ctrlDown).subscribe(function(e) {
     window.location = slides[currentSlide()]
   })
-  keyUps(50 /* 2 */).Where(ctrlDown).Subscribe(function(e) {
+  keyUps(50 /* 2 */).where(ctrlDown).subscribe(function(e) {
     window.location = 'split.html?split1=' + slides[prevSlide()] + '&split2=' + slides[currentSlide()]
   })
 
@@ -19,7 +19,7 @@ $(function() {
   }
 
   function keyUps(code) {
-    return $(document).toObservable("keyup").Where(function(e) { return e.keyCode == code })
+    return $(document).onAsObservable("keyup").where(function(e) { return e.keyCode == code })
   }
 
   function prevSlide() {

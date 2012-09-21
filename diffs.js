@@ -1,11 +1,11 @@
 $(function() {
-  var submit = $('#submit').toObservable('click')
+  var submit = $('#submit').onAsObservable('click')
 
   var fnameDiff = values('#fname').ResettableDiff(submit, $('#fname').val())
   var lnameDiff = values('#lname').ResettableDiff(submit, $('#lname').val())
 
-  fnameDiff.Subscribe(show("#fname"))
-  lnameDiff.Subscribe(show("#lname"))
+  fnameDiff.subscribe(show("#fname"))
+  lnameDiff.subscribe(show("#lname"))
 })
 
 function show(selector) { 
@@ -25,7 +25,7 @@ function show(selector) {
 Rx.Observable.prototype.Diff = function(savedValues, initialSavedValue) {
   var currentValues = this
   var saved = savedValues.StartWith(initialSavedValue)
-  return currentValues.CombineLatest(saved, tupled)
+  return currentValues.combineLatest(saved, tupled)
 }  
 
 // A helper for a common case where saved value is reset to be the latest value from
@@ -42,10 +42,10 @@ Rx.Observable.prototype.ResettableDiff = function(reset, initialSavedValue) {
 Rx.Observable.prototype.CombineWithLatestOf = function(second, combinator) {
   var first = this
   var latest
-  second.Subscribe(function(value) { latest = value })
+  second.subscribe(function(value) { latest = value })
 
   return Rx.Observable.Create(function(subscriber) {
-    var seq = first.Subscribe(function(value) {
+    var seq = first.subscribe(function(value) {
       subscriber.OnNext(combinator(value, latest))
     })
     return function() { seq.Dispose() }
@@ -53,7 +53,7 @@ Rx.Observable.prototype.CombineWithLatestOf = function(second, combinator) {
 }
 
 function values(selector) {
-  return $(selector).toObservable('keyup').Select(function(e) { return $(e.target).val() })
+  return $(selector).onAsObservable('keyup').select(function(e) { return $(e.target).val() })
 }
 
 function tupled(x, y) { return [x, y] }

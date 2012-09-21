@@ -16,20 +16,20 @@ $(function() {
   var marketing = $('#allow-marketing').clicks()
 
   var unameValidation = mkValidation(uname, maxLengthValidator(15))
-  unameValidation.Subscribe(toggleEffect($('.username-too-long-error')))
-  unameValidation.Subscribe(toggleClassEffect($('#username'), 'invalid'))
+  unameValidation.subscribe(toggleEffect($('.username-too-long-error')))
+  unameValidation.subscribe(toggleClassEffect($('#username'), 'invalid'))
 
   var uniqueValidation = mkServerValidation(uname, "http://localhost:8080/validateusername/")
-  uniqueValidation.validation.Subscribe(toggleEffect($('.username-taken-error')))
-  uniqueValidation.requestOn.Subscribe(function() { $('#username').addClass("on-validate") })
+  uniqueValidation.validation.subscribe(toggleEffect($('.username-taken-error')))
+  uniqueValidation.requestOn.subscribe(function() { $('#username').addClass("on-validate") })
   var indicatorOff = function() { $('#username').removeClass("on-validate") }
-  uniqueValidation.requestOff.Subscribe(indicatorOff, indicatorOff, indicatorOff)
+  uniqueValidation.requestOff.subscribe(indicatorOff, indicatorOff, indicatorOff)
 
   var pwdValidation = mkValidation(combine([pwd, pwd2]), emptyOk(matchingValuesValidator()))
-  pwdValidation.Subscribe(toggleEffect($('.password-match-error')))
+  pwdValidation.subscribe(toggleEffect($('.password-match-error')))
 
   var unamePwdValidation = mkValidation(combine([uname, pwd]), emptyOk(not(matchingValuesValidator())))
-  unamePwdValidation.Subscribe(toggleEffect($('.password-username-error')))
+  unamePwdValidation.subscribe(toggleEffect($('.password-username-error')))
 
   var minNumValidation = mkValidation(min, emptyOk(numberValidator()))
   var maxNumValidation = mkValidation(max, emptyOk(numberValidator()))
@@ -37,14 +37,14 @@ $(function() {
     .ValidWhileInvalid(minNumValidation)
     .ValidWhileInvalid(maxNumValidation)
 
-  minNumValidation.Subscribe(toggleEffect($('.min-not-number-error')))
-  minNumValidation.Subscribe(toggleClassEffect($('#target-min'), 'invalid'))
-  maxNumValidation.Subscribe(toggleEffect($('.max-not-number-error')))
-  maxNumValidation.Subscribe(toggleClassEffect($('#target-max'), 'invalid'))
-  minMaxValidation.Subscribe(toggleEffect($('.minmax-error')))
+  minNumValidation.subscribe(toggleEffect($('.min-not-number-error')))
+  minNumValidation.subscribe(toggleClassEffect($('#target-min'), 'invalid'))
+  maxNumValidation.subscribe(toggleEffect($('.max-not-number-error')))
+  maxNumValidation.subscribe(toggleClassEffect($('#target-max'), 'invalid'))
+  minMaxValidation.subscribe(toggleEffect($('.minmax-error')))
 
   var emailValidation = mkValidation(email, emptyOk(emailValidator()))
-  emailValidation.Subscribe(toggleEffect($('.email-format-error')))
+  emailValidation.subscribe(toggleEffect($('.email-format-error')))
   var marketingValidation = emailValidation.ValidWhileEqual(marketing, "")
   var emailRequired = mkValidation(email, requiredValidator()).ValidWhileEqual(marketing, "")
 
@@ -53,6 +53,6 @@ $(function() {
   var all = combine([unameValidation, unamePwdValidation, pwdValidation, minNumValidation,
                      maxNumValidation, minMaxValidation, marketingValidation, 
                      requiredValidation, emailRequired, uniqueValidation.validation])
-  all.Subscribe(disableEffect($('#create-button')))
+  all.subscribe(disableEffect($('#create-button')))
 })
 

@@ -5,9 +5,10 @@
   <link type="text/css" rel="stylesheet" media="all" href="learn-rx.css" />
   <link href="css/prettify.css" type="text/css" rel="stylesheet" />
   <script type="text/javascript" src="js/prettify.js"></script>
-  <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="js/jquery-1.8.2.js"></script>
   <script type="text/javascript" src="js/rx.js"></script>
-  <script type="text/javascript" src="js/rx.jQuery.js"></script>
+  <script type="text/javascript" src="js/rx.time.js"></script>
+  <script type="text/javascript" src="js/rx.jquery.js"></script>
   <script type="text/javascript" src="js/jsDraw2D.js"></script>
   <script type="text/javascript" src="learn-rx.js"></script>
   <script type="text/javascript" src="slide.js"></script>
@@ -15,37 +16,37 @@
 
 <script id="source" type="text/javascript">
 $(function() {
-  var input = $('#query').toObservable('keyup')
-    .Throttle(50)
-    .Select(function(e) { return $(e.target).val() })
-    .DistinctUntilChanged()
+  var input = $('#query').onAsObservable('keyup')
+    .throttle(50)
+    .select(function(e) { return $(e.target).val() })
+    .distinctUntilChanged()
 
   var paging = function(term) {
     return scrollBottom
-      .Scan(0, function(current, x) { return current+1 })
-      .SelectMany(function(page) { return query(term, page) })
+      .scan(0, function(current, x) { return current+1 })
+      .selectMany(function(page) { return query(term, page) })
   }
 
-  var first = input.Select(function(term) { return query(term, 0) }).Switch()
-  var more = input.Select(paging).Switch()
+  var first = input.select(function(term) { return query(term, 0) }).switchLatest()
+  var more = input.select(paging).switchLatest()
 
-  var scrollBottom = $('#overviewpanel').toObservable('scroll')
-    .Select(isScrolledToBottom)
-    .DistinctUntilChanged()
-    .Where(function(inBottom) { return inBottom })
+  var scrollBottom = $('#overviewpanel').onAsObservable('scroll')
+    .select(isScrolledToBottom)
+    .distinctUntilChanged()
+    .where(function(inBottom) { return inBottom })
 
-  var selection = $('#overview li').toLiveObservable('click')
-    .Select(function(x) { return $(x.target).map(function(i, link) { return link.href })[0] })
+  var selection = $('#overview li').liveAsObservable('click')
+    .select(function(x) { return $(x.target).map(function(i, link) { return link.href })[0] })
 
-  first.Subscribe(function(rs) { $('#overview').html(''); renderResults(rs) })
-  more.Subscribe(renderResults)
+  first.subscribe(function(rs) { $('#overview').html(''); renderResults(rs) })
+  more.subscribe(renderResults)
 
-  first.Throttle(1500).Subscribe(
+  first.throttle(1500).subscribe(
     function(rs) {
       if (rs.length > 0) renderDetail(rs[0].url)
     })
 
-  selection.Subscribe(renderDetail)
+  selection.subscribe(renderDetail)
 
   // String -> Int -> Observable [SearchResultJSON]
   function query(term, page) {
@@ -54,7 +55,7 @@ $(function() {
     var params = { v:"1.0", q:escape(term), num:pageSize, rsz:"large", safe:"off", start:page*pageSize }
 
     return $.ajaxAsObservable({ url: url, dataType: "jsonp", data: params })
-            .Select(function(d) { return d.data.responseData ? d.data.responseData.results : [] })
+            .select(function(d) { return d.data.responseData ? d.data.responseData.results : [] })
   }
 
   // SearchResultJSON -> ()

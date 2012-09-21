@@ -5,9 +5,10 @@
   <link type="text/css" rel="stylesheet" media="all" href="learn-rx.css" />
   <link href="css/prettify.css" type="text/css" rel="stylesheet" />
   <script type="text/javascript" src="js/prettify.js"></script>
-  <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="js/jquery-1.8.2.js"></script>
   <script type="text/javascript" src="js/rx.js"></script>
-  <script type="text/javascript" src="js/rx.jQuery.js"></script>
+  <script type="text/javascript" src="js/rx.time.js"></script>
+  <script type="text/javascript" src="js/rx.jquery.js"></script>
   <script type="text/javascript" src="js/jsDraw2D.js"></script>
   <script type="text/javascript" src="learn-rx.js"></script>
   <script type="text/javascript" src="slide.js"></script>
@@ -18,17 +19,17 @@ function Point(event) { return { x: event.pageX, y: event.pageY }}
 
 // Observable Event -> Observable Event -> Observable Event -> Observable (Point, Point)
 function dragPath(mouseDown, mouseUp, mouseMove) {
-  var moves = mouseMove.SkipUntil(mouseDown).TakeUntil(mouseUp)
+  var moves = mouseMove.skipUntil(mouseDown).takeUntil(mouseUp)
   return moves
-    .Zip(moves.Skip(1), function(prev, cur) { return [Point(prev), Point(cur)] })
+    .zip(moves.skip(1), function(prev, cur) { return [Point(prev), Point(cur)] })
 }
 
 $(function() {
-  var mouseDown = $("#draggable").toObservable("mousedown")
-  var mouseUp   = $(document).toObservable("mouseup")
-  var mouseMove = $(document).toObservable("mousemove")
+  var mouseDown = $("#draggable").onAsObservable("mousedown")
+  var mouseUp   = $(document).onAsObservable("mouseup")
+  var mouseMove = $(document).onAsObservable("mousemove")
 
-  dragPath(mouseDown, mouseUp, mouseMove).Repeat().Subscribe(function(line) {
+  dragPath(mouseDown, mouseUp, mouseMove).repeat().subscribe(function(line) {
     var deltaX = line[1].x - line[0].x
     var deltaY = line[1].y - line[0].y
     var pos = $("#draggable").position()
