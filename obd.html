@@ -16,36 +16,33 @@
 
 <script id="source" type="text/javascript">
 $(function() {
+  var rx = Rx.Observable
   var input = $('#query').onAsObservable('keyup')
     .throttle(50)
     .select(function(e) { return $(e.target).val() })
     .distinctUntilChanged()
 
-  var paging = function(term) {
-    return scrollBottom
-      .scan(0, function(current, x) { return current+1 })
-      .selectMany(function(page) { return query(term, page) })
+  var nextpage = rx.interval(200).where(bottomIsVisible)
+
+  function pager(q, page) {
+    return query(q, page).selectMany(function(res) {
+        return rx.returnValue(res).concat(nextpage.take(1).selectMany(function() { return pager(q, page+1) }))
+    })
   }
 
-  var first = input.select(function(term) { return query(term, 0) }).switchLatest()
-  var more = input.select(paging).switchLatest()
-
-  var scrollBottom = $('#overviewpanel').onAsObservable('scroll')
-    .select(isScrolledToBottom)
-    .distinctUntilChanged()
-    .where(function(inBottom) { return inBottom })
+  var infinityScroll = input
+    .select(function(q) { 
+      var pages = pager(q, 0)
+      pages.take(1).subscribe(function(rs) { if (rs.length > 0) renderDetail(rs[0].url) })
+      return pages 
+    })
+    .switchLatest()
 
   var selection = $('#overview li').liveAsObservable('click')
     .select(function(x) { return $(x.target).map(function(i, link) { return link.href })[0] })
 
-  first.subscribe(function(rs) { $('#overview').html(''); renderResults(rs) })
-  more.subscribe(renderResults)
-
-  first.throttle(1500).subscribe(
-    function(rs) {
-      if (rs.length > 0) renderDetail(rs[0].url)
-    })
-
+  input.subscribe(function() { $("#overview").html("") })
+  infinityScroll.subscribe(renderResults)
   selection.subscribe(renderDetail)
 
   // String -> Int -> Observable [SearchResultJSON]
@@ -71,10 +68,11 @@ $(function() {
     $('#detail').attr('src', link)
   }
 
-  // HtmlEvent -> Bool
-  function isScrolledToBottom(e) {
-    var scrollTolerance = 100
-    return e.target.scrollTop + e.target.offsetHeight + scrollTolerance > e.target.scrollHeight
+  function bottomIsVisible() {
+    var elem = $('#overview')
+    var viewportBottom = $(window).scrollTop() + window.innerHeight
+    var loadingPoint = elem.offset().top + elem.outerHeight()
+    return viewportBottom >= loadingPoint
   }
 })
 
