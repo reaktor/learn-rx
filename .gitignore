@@ -7,3 +7,4 @@ project/boot
 *.lock
 .idea
 *.iml
+.DS_Store
