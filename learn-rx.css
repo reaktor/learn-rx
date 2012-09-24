@@ -25,3 +25,6 @@ h1 {-moz-user-select:none;-webkit-user-select:none;}
 #overviewpanel ul {position:relative;top:10px;}
 #overviewpanel li {padding:10px;}
 #detailpanel {position:absolute;left:220px;top:100px;width:100%;height:600px;}
+table {margin: 0 auto;}
+th {border-bottom: 1px solid #000;}
+th,td {padding:5px 10px;}
