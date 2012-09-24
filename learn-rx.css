@@ -21,9 +21,13 @@ h1 {-moz-user-select:none;-webkit-user-select:none;}
 .impls ul {padding:10px;margin:0;}
 .impls li {list-style-type:none;padding-top:20px;font-size:30px;}
 .impls a, .impls a:visited {display:block;width:30em;font-family:arial,verdana,sans-serif;font-size:20px;text-align:left;text-decoration:none;}
-#overviewpanel {position:absolute;width:200px;top:100px;overflow:scroll;height:500px;}
-#overviewpanel ul {position:relative;top:10px;}
-#overviewpanel li {padding:10px;}
+#query {width: 95%;}
+#overviewpanel {position:absolute;width:200px;top:100px;overflow-y:auto;height:500px;font-size: 12px;font-family: arial,serif;}
+#overviewpanel ul {position:relative;top:10px; padding: 0;}
+#overviewpanel li {display: block; padding: 0;}
+#overviewpanel li a {display: block; text-decoration: none;padding: 5px; color:#000;}
+#overviewpanel li a:visited {color:#222;}
+#overviewpanel li a:hover {display: block; background: #666;color: #fff;}
 #detailpanel {position:absolute;left:220px;top:100px;width:100%;height:600px;}
 table {margin: 0 auto;}
 th {border-bottom: 1px solid #000;}
